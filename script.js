@@ -35,5 +35,6 @@ request.addEventListener('load', function () {
 
 `;
   countriesContainer.insertAdjacentHTML('beforeend', html);
+  // countriesContainer.innerHTML = html;
   countriesContainer.style.opacity = 1;
 });
