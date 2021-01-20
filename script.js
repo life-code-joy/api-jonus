@@ -102,3 +102,8 @@ const getCountryAndNeighbour = function (country) {
 };
 
 getCountryAndNeighbour('russia');
+
+// promises
+const request = fetch('https://restcountries.eu/rest/v2/name/australia');
+
+console.log(request);
