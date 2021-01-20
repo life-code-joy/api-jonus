@@ -103,7 +103,32 @@ const getCountryAndNeighbour = function (country) {
 
 getCountryAndNeighbour('russia');
 
-// promises
+// consuming promises 246
 const request = fetch('https://restcountries.eu/rest/v2/name/australia');
-
 console.log(request);
+
+// now to organise into a function
+/*
+const getCountryData = function(country){
+  fetch(`https://restcountries.eu/rest/v2/name/${country}`).then(function(response){
+  console.log(response);
+  return response.json();
+  }).then(function(data){
+    console.log(data[0]);
+    renderCountry(data[0])
+    
+  })
+}
+
+getCountryData('monaco');
+*/
+
+// simplified code from above
+const getCountryData = function(country){
+  fetch(`https://restcountries.eu/rest/v2/name/${country}`)
+  .then(response => response.json()
+  .then(data => renderCountry(data[0]))
+    
+  
+  )}
+  getCountryData('bahamas')
