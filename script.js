@@ -101,7 +101,7 @@ const getCountryAndNeighbour = function (country) {
   });
 };
 
-getCountryAndNeighbour('russia');
+// getCountryAndNeighbour('russia');
 
 // consuming promises 246
 const request = fetch('https://restcountries.eu/rest/v2/name/australia');
@@ -125,10 +125,19 @@ getCountryData('monaco');
 
 // simplified code from above
 const getCountryData = function(country){
+  //country 1
   fetch(`https://restcountries.eu/rest/v2/name/${country}`)
-  .then(response => response.json()
-  .then(data => renderCountry(data[0]))
-    
-  
-  )}
-  getCountryData('bahamas')
+  .then(response => response.json())
+  .then(data => {
+    renderCountry(data[0]);
+    const neighbour = data[0].borders[0];
+
+    if(!neighbour) return;
+    //country2
+    return fetch(`https://restcountries.eu/rest/v2/alpha/${neighbour}`)
+  })
+    .then(response => response.json())
+    .then(data => renderCountry(data, 'neighbour'))
+  }
+
+  getCountryData('portugal')
