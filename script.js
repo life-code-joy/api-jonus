@@ -2,6 +2,34 @@
 
 const btn = document.querySelector('.btn-country');
 const countriesContainer = document.querySelector('.countries');
+
+const renderError = function (msg) {
+  countriesContainer.insertAdjacentText('beforeend', msg);
+  // countriesContainer.style.opacity = 1;
+};
+
+//added a className as parameter and the in the template - jonus made a css class for the neighbor country
+const renderCountry = function (data, className = '') {
+  const html = `
+  <article class="country ${className}" >
+  <img class="country__img" src="${data.flag}" />
+  <div class="country__data">
+    <h3 class="country__name">${data.name}</h3>
+    <h4 class="country__region">${data.region}</h4>
+    <p class="country__row"><span>👫</span>${(
+      +data.population / 1000000
+    ).toFixed(1)} million</p>
+    <p class="country__row"><span>🗣️</span>${data.languages[0].name}</p>
+    <p class="country__row"><span>💰</span>${data.currencies[0].name}</p>  
+  </div>
+</article>
+
+
+`;
+  countriesContainer.insertAdjacentHTML('beforeend', html);
+  // countriesContainer.innerHTML = html;
+  // countriesContainer.style.opacity = 1;
+};
 // xmlHttpequest
 /*
 const getCountryData = function (country) {
@@ -47,28 +75,6 @@ getCountryData('canada');
 */
 
 // callback hell
-//added a className as parameter and the in the template - jonus made a css class for the neighbor country
-const renderCountry = function (data, className = '') {
-  const html = `
-  <article class="country ${className}" >
-  <img class="country__img" src="${data.flag}" />
-  <div class="country__data">
-    <h3 class="country__name">${data.name}</h3>
-    <h4 class="country__region">${data.region}</h4>
-    <p class="country__row"><span>👫</span>${(
-      +data.population / 1000000
-    ).toFixed(1)} million</p>
-    <p class="country__row"><span>🗣️</span>${data.languages[0].name}</p>
-    <p class="country__row"><span>💰</span>${data.currencies[0].name}</p>  
-  </div>
-</article>
-
-
-`;
-  countriesContainer.insertAdjacentHTML('beforeend', html);
-  // countriesContainer.innerHTML = html;
-  countriesContainer.style.opacity = 1;
-};
 
 const getCountryAndNeighbour = function (country) {
   const request = new XMLHttpRequest();
@@ -124,20 +130,31 @@ getCountryData('monaco');
 */
 
 // simplified code from above
-const getCountryData = function(country){
+const getCountryData = function (country) {
   //country 1
   fetch(`https://restcountries.eu/rest/v2/name/${country}`)
-  .then(response => response.json())
-  .then(data => {
-    renderCountry(data[0]);
-    const neighbour = data[0].borders[0];
+    .then(response => response.json())
+    .then(data => {
+      renderCountry(data[0]);
+      const neighbour = data[0].borders[0];
 
-    if(!neighbour) return;
-    //country2
-    return fetch(`https://restcountries.eu/rest/v2/alpha/${neighbour}`)
-  })
+      if (!neighbour) return;
+      //country2
+      return fetch(`https://restcountries.eu/rest/v2/alpha/${neighbour}`);
+    })
     .then(response => response.json())
     .then(data => renderCountry(data, 'neighbour'))
-  }
+    .catch(err => {
+      console.error(`${err}`);
+      renderError(`Something went wrong ${err.message} Try Again!`);
+    })
+    .finally(() => {
+      countriesContainer.style.opacity = 1;
+    });
+};
 
-  getCountryData('portugal')
+getCountryData('usa');
+
+btn.addEventListener('click', function () {
+  getCountryData('rtt'); // will throw error
+});
