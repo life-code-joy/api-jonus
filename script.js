@@ -75,7 +75,7 @@ getCountryData('canada');
 */
 
 // callback hell
-
+/*
 const getCountryAndNeighbour = function (country) {
   const request = new XMLHttpRequest();
   request.open('GET', `https://restcountries.eu/rest/v2/name/${country}`);
@@ -109,9 +109,11 @@ const getCountryAndNeighbour = function (country) {
 
 // getCountryAndNeighbour('russia');
 
+
+*/
 // consuming promises 246
-const request = fetch('https://restcountries.eu/rest/v2/name/australia');
-console.log(request);
+// const request = fetch('https://restcountries.eu/rest/v2/name/australia');
+// console.log(request);
 
 // now to organise into a function
 /*
@@ -153,7 +155,7 @@ const getCountryData = function (country) {
     });
 };
 
-getCountryData('usa');
+getCountryData('cambodia');
 
 btn.addEventListener('click', function () {
   getCountryData('rtt'); // will throw error
