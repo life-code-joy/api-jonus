@@ -5,7 +5,7 @@ const countriesContainer = document.querySelector('.countries');
 
 const renderError = function (msg) {
   countriesContainer.insertAdjacentText('beforeend', msg);
-  // countriesContainer.style.opacity = 1;
+  countriesContainer.style.opacity = 1;
 };
 
 //added a className as parameter and the in the template - jonus made a css class for the neighbor country
@@ -28,7 +28,7 @@ const renderCountry = function (data, className = '') {
 `;
   countriesContainer.insertAdjacentHTML('beforeend', html);
   // countriesContainer.innerHTML = html;
-  // countriesContainer.style.opacity = 1;
+  countriesContainer.style.opacity = 1;
 };
 // xmlHttpequest
 /*
@@ -132,6 +132,8 @@ getCountryData('monaco');
 */
 
 // simplified code from above
+
+/*
 const getCountryData = function (country) {
   //country 1
   fetch(`https://restcountries.eu/rest/v2/name/${country}`)
@@ -160,3 +162,107 @@ getCountryData('cambodia');
 btn.addEventListener('click', function () {
   getCountryData('rtt'); // will throw error
 });
+
+*/
+
+// coding challenge - where am I
+// fetch('https://geocode.xyz/52.508,13.381?json=1')
+//   .then(response => response.json())
+//   .then(data => console.log(data));
+
+// .then(request => request.json());
+
+//so far it works ok but will copy throw error and catch
+/*
+const geoC = document.querySelector('.geoCountries');
+
+const whereAmI = function (lat, long) {
+  const response = fetch(`https://geocode.xyz/${lat},${long}?json=1`)
+    .then(response => response.json()  )
+    // .then(data => console.log(`I am in ${data.region} ${data.country}`));
+    .then(data => {
+      const html = `
+      <section style="background-color: #ccc; padding: 2rem">
+       <h1 style="color:blue; font-size:2.5rem;" >Hi this is your country and details</h1><br>
+       <h2 style="fontStyle:italic">${data.region} ${data.country}  👧🏻👧🏻👧🏻</h2>
+       <h3 style="color: white">The elevation is ${data.elevation}</h3>
+      </section>
+      `;
+      console.log(data);
+      geoC.insertAdjacentHTML('beforeend', html);
+    });
+};
+
+whereAmI(52.508, 13.381);
+whereAmI(19.307, 72.873);
+whereAmI(-33.933, 18.474);
+*/
+
+//added some css and ouput it - extra for part1
+/*
+const geoC = document.querySelector('.geoCountries');
+
+const whereAmI = function (lat, long) {
+  const response = fetch(`https://geocode.xyz/${lat},${long}?json=1`)
+    .then(response => {
+      if (!response.ok)
+        throw new Error(`Problem with geocoding ${response.status}`);
+      return response.json();
+    })
+    .then(data => {
+      const html = `
+      <section style="background-color: #ccc; padding: 2rem">
+       <h1 style="color:blue; font-size:2.5rem;" >Hi this is your country and details</h1><br>
+       <h2 style="fontStyle:italic">${data.region} ${data.country}  👧🏻👧🏻👧🏻</h2>
+       <h3 style="color: white">The elevation is ${data.elevation}</h3>
+      </section>
+      `;
+      console.log(data);
+      geoC.insertAdjacentHTML('beforeend', html);
+    })
+    .catch(err => console.error(`${err.message} 👅 `));
+};
+
+whereAmI(52.508, 13.381);
+whereAmI(19.307, 72.873);
+whereAmI(-33.933, 18.474);
+*/
+//part 2
+
+const whereAmI = function (lat, long) {
+  const response = fetch(`https://geocode.xyz/${lat},${long}?json=1`)
+    .then(response => {
+      if (!response.ok)
+        throw new Error(`Problem with geocoding ${response.status}`);
+      return response.json();
+    })
+    .then(data => {
+      console.log(`You are in ${data.city} , ${data.country} `);
+
+      return fetch(`https://restcountries.eu/rest/v2/name/${data.country}`);
+    })
+    .then(response => {
+      if (!response.ok) throw new Error(`Country not found ${response.status}`);
+      return response.json();
+    })
+    .then(data => {
+      renderCountry(data[0]);
+      // console.log(`You are in ${data.country} `);
+    });
+};
+
+whereAmI(52.508, 13.381);
+whereAmI(19.307, 72.873);
+whereAmI(-33.933, 18.474);
+
+// promises 253 building a simple promise
+
+const lotteryPromise = new Promise(function (resolve, reject) {
+  if (Math.random() >= 0.5) {
+    resolve('you are a winner!');
+  } else {
+    reject('You are a big loser!');
+  }
+});
+
+lotteryPromise.then(res => console.log(res)).catch(err => console.error(err));
