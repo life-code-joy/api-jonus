@@ -256,7 +256,7 @@ whereAmI(19.307, 72.873);
 whereAmI(-33.933, 18.474);
 
 // promises 253 building a simple promise
-
+/*
 const lotteryPromise = new Promise(function (resolve, reject) {
   if (Math.random() >= 0.5) {
     resolve('you are a winner!');
@@ -264,5 +264,65 @@ const lotteryPromise = new Promise(function (resolve, reject) {
     reject('You are a big loser!');
   }
 });
-
 lotteryPromise.then(res => console.log(res)).catch(err => console.error(err));
+*/
+
+// create with a set timeout to make asynch
+
+const lotteryPromise = new Promise(function (resolve, reject) {
+  console.log('A lottery is happening ♣︎');
+  setTimeout(() => {
+    if (Math.random() >= 0.5) {
+      resolve('you are a winner!');
+    } else {
+      reject(new Error('You are a big loser!'));
+    }
+  }, 3000);
+});
+lotteryPromise.then(res => console.log(res)).catch(err => console.error(err));
+
+// example 2 - promisifying setTimeout
+
+const wait = function (seconds) {
+  return new Promise(function (resolve) {
+    setTimeout(resolve, seconds * 1000);
+  });
+};
+
+wait(2)
+  .then(() => {
+    console.log('I waited for 1 second');
+    return wait(1);
+  })
+  .then(() => {
+    console.log('I waited 2 seconds');
+    return wait(2);
+  })
+  .then(() => {
+    console.log('I waited 3 seconds');
+    return wait(3);
+  })
+  .then(() => {
+    console.log('I waited 4 seconds');
+    return wait(4);
+  });
+// callback hell changed to promise
+/*
+setTimeout(() => {
+  console.log('1 sec');
+  setTimeout(() => {
+    console.log('2secs');
+    setTimeout(() => {
+      console.log('3secs');
+      setTimeout(() => {
+        console.log('4secs');
+      }, 1000);
+    }, 2000);
+  }, 3000);
+}, 4000);
+
+// becomes ... look aboove to the .then chain
+*/
+
+Promise.resolve('abc').then(x => console.log(x));
+Promise.reject('abc').catch(x => console.log('shazbot'));
