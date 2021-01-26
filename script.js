@@ -228,7 +228,7 @@ whereAmI(19.307, 72.873);
 whereAmI(-33.933, 18.474);
 */
 //part 2
-
+/*
 const whereAmI = function (lat, long) {
   const response = fetch(`https://geocode.xyz/${lat},${long}?json=1`)
     .then(response => {
@@ -254,7 +254,7 @@ const whereAmI = function (lat, long) {
 whereAmI(52.508, 13.381);
 whereAmI(19.307, 72.873);
 whereAmI(-33.933, 18.474);
-
+*/
 // promises 253 building a simple promise
 /*
 const lotteryPromise = new Promise(function (resolve, reject) {
@@ -326,3 +326,59 @@ setTimeout(() => {
 
 Promise.resolve('abc').then(x => console.log(x));
 Promise.reject('abc').catch(x => console.log('shazbot'));
+
+// promisifyimg the callback based geolocation API
+// navigator.geolocation.getCurrentPosition(
+//   position => console.log(position),
+//   err => console.error(err)
+// );
+
+const getPosition = function () {
+  return new Promise(function (resolve, reject) {
+    navigator.geolocation.getCurrentPosition(
+      // position => console.log(position),
+      position => resolve(position),
+      // err => console.error(err)
+      err => reject(err)
+    );
+  });
+};
+
+getPosition().then(
+  res => console.log(res),
+  err => console.error(err)
+);
+console.log('geolocation is finding the coords');
+
+//code from the coding challenge
+
+const whereAmINow = function () {
+  getPosition()
+    .then(pos => {
+      const { latitude: lat, longitude: long } = pos.coords;
+      return fetch(`https://geocode.xyz/${lat},${long}?json=1`);
+    })
+    .then(response => {
+      if (!response.ok)
+        throw new Error(`Problem with geocoding ${response.status}`);
+      return response.json();
+    })
+    .then(data => {
+      console.log(data);
+      console.log(`You are in ${data.city} , ${data.country} `);
+
+      return fetch(`https://restcountries.eu/rest/v2/name/${data.country}`);
+    })
+    .then(response => {
+      if (!response.ok) throw new Error(`Country not found ${response.status}`);
+      return response.json();
+    })
+    .then(data => {
+      renderCountry(data[0]);
+      console.log(`You are in ${data.country} `);
+    });
+};
+
+btn.addEventListener('click', whereAmINow);
+whereAmINow(52.508, 13.381);
+//bn doesn't work but no error
