@@ -382,3 +382,17 @@ const whereAmINow = function () {
 btn.addEventListener('click', whereAmINow);
 whereAmINow(52.508, 13.381);
 //bn doesn't work but no error
+
+// async / await
+
+const whereTheHeckAmI = async function (country) {
+  //same code as the async await
+  // fetch(`https://restcountries.eu/rest/v2/name/${country}`).then(res =>
+  //   console.log(res)
+  // );
+
+  const res = await fetch(`https://restcountries.eu/rest/v2/name/${country}`);
+  console.log(res);
+};
+whereTheHeckAmI('portugal');
+console.log('First');
