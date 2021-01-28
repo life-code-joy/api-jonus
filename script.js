@@ -1,4 +1,5 @@
 'use strict';
+import challenge2 from './challenge2.js';
 
 const btn = document.querySelector('.btn-country');
 const countriesContainer = document.querySelector('.countries');
